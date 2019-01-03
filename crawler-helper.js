@@ -16,6 +16,24 @@ const mapLeague = (leagueText) => {
   }
 }
 
+const truncateTeamName = (str) => {
+    var re = str.match(/^.{0,5}[\S]*/);
+    var l = re[0].length;
+    var re = re[0].replace(/\s$/,'');
+    if(l < str.length)
+        re = re + "&hellip;";
+    return re;
+}
+
+const truncate = (str, len) => {
+    var re = str.match(/^.{0,len}[\S]*/);
+    var l = re[0].length;
+    var re = re[0].replace(/\s$/,'');
+    if(l < str.length)
+        re = re + "&hellip;";
+    return re;
+}
+
 const rankArr = [
   "S",
   "G",
@@ -27,7 +45,6 @@ const rankArr = [
 
 const leagueArr = [
   "Professional",
-  "MDL",
   "Advanced",
   "Main",
   "IM",
@@ -53,5 +70,7 @@ module.exports = {
   mapLeague,
   rankArr,
   leagueArr,
-  removePastRoles
+  removePastRoles,
+  truncateTeamName,
+  truncate
 }
