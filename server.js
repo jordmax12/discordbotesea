@@ -45,7 +45,7 @@ client.on('message', msg => {
                     newDisplayName = `[LFT] ${oldDisplayName}`;
                   }
                   console.log(`setting username ${newDisplayName}`);
-                  if(newDisplayName.length > 25) newDisplayName = truncate(newDisplayName, 25);
+                  if(newDisplayName.length > 24) newDisplayName = truncate(newDisplayName, 24) + ']';
                     
                   msg.member.setNickname(newDisplayName);
                 } catch(e) { msg.reply('Unable to set nickname, check with developer.'); console.log(e); };
