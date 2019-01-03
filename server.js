@@ -7,7 +7,7 @@ const Humanoid = require("humanoid-js");
 const humanoid = new Humanoid();
 require('dotenv').config()
 // Helpers
-const { mapLeague, removePastRoles, truncateTeamName, truncate } = require('./crawler-helper.js');
+const { mapLeague, removePastRoles, truncate } = require('./crawler-helper.js');
 
 client.login(process.env.BOT_TOKEN);
 
@@ -40,16 +40,15 @@ client.on('message', msg => {
                   if(league != 'LFT')
                   {
                     let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
-                    if(teamName.length > 7) teamName = truncateTeamName(teamName);
                     newDisplayName =`[${teamName}-${league}] ${oldDisplayName}`;
                   } else {
                     newDisplayName = `[LFT] ${oldDisplayName}`;
                   }
                   console.log(`setting username ${newDisplayName}`);
-                  if(newDisplayName.length > 25) newDisplayName = truncate(newDisplayName);
+                  if(newDisplayName.length > 25) newDisplayName = truncate(newDisplayName, 25);
                     
                   msg.member.setNickname(newDisplayName);
-                } catch(e) { msg.reply('Unable to set nickname, check with developer.') };
+                } catch(e) { msg.reply('Unable to set nickname, check with developer.'); console.log(e); };
                 // 
                 msg.reply(`users ESEA username ${oldDisplayName}`);
                 
@@ -83,6 +82,7 @@ client.on('message', msg => {
     }
   }
 })
+
 
 // create an express object: a Web server
 var app = express();
