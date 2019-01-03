@@ -16,22 +16,10 @@ const mapLeague = (leagueText) => {
   }
 }
 
-const truncateTeamName = (str) => {
-    var re = str.match(/^.{0,5}[\S]*/);
-    var l = re[0].length;
-    var re = re[0].replace(/\s$/,'');
-    if(l < str.length)
-        re = re + "&hellip;";
-    return re;
-}
-
 const truncate = (str, len) => {
-    var re = str.match(/^.{0,len}[\S]*/);
-    var l = re[0].length;
-    var re = re[0].replace(/\s$/,'');
-    if(l < str.length)
-        re = re + "&hellip;";
-    return re;
+    return str.length > len ? 
+    str.substring(0, len - 3) + "..." : 
+    str;
 }
 
 const rankArr = [
@@ -71,6 +59,5 @@ module.exports = {
   rankArr,
   leagueArr,
   removePastRoles,
-  truncateTeamName,
   truncate
 }
