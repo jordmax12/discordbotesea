@@ -27,6 +27,7 @@ const rankArr = [
 
 const leagueArr = [
   "Professional",
+  "MDL",
   "Advanced",
   "Main",
   "IM",
