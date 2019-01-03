@@ -36,7 +36,7 @@ client.on('message', msg => {
                     newDisplayName = msg.member.displayName; //default
                 
                 try {
-                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('-')[0].trim();
+                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('- User Profile')[0].trim();
                   if(league != 'LFT')
                   {
                     let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
