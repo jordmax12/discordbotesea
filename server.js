@@ -51,14 +51,12 @@ client.on('message', msg => {
                     
                   msg.member.setNickname(newDisplayName);
                 } catch(e) { msg.reply('Unable to set nickname, check with developer.'); console.log(e); };
-                // 
-                msg.reply(`Role(s) added. Thanks!`);
                 
                 removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
-                      // msg.member.addRole(rankRole);
+                      msg.member.addRole(rankRole);
                       if(leagueRole) msg.member.addRole(leagueRole);
-                      // msg.reply('role(s) assigned, thanks!')
+                      msg.reply('role(s) assigned, thanks!')
                   });
             }
             done();
