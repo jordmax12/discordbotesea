@@ -38,6 +38,7 @@ client.on('message', msg => {
                      : `[LFT] ${oldDisplayName}`;
                 
                 msg.member.setNickname(newDisplayName);
+                msg.reply(`Testing nickname, should set to ${newDisplayName}`);
                 
                 removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
