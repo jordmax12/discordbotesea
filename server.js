@@ -31,6 +31,13 @@ client.on('message', msg => {
                   leagueRole = msg.guild.roles.find(role => role.name.trim() === league);
 
               if(rankRole) {
+                let oldDisplayName = msg.member.displayName;
+                try {
+                  let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].innerHTML;
+                  let newDisplayName = `[${teamName}-${leagueRole}] ${oldDisplayName}`;
+                  msg.member.setNickname(newDisplayName);
+                }
+                
                 removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
                       msg.member.addRole(rankRole);
