@@ -36,25 +36,28 @@ client.on('message', msg => {
                     newDisplayName = msg.member.displayName; //default
                 
                 try {
-                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('- User Profile')[0].trim();
+                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('-')[0].trim();
                   if(league != 'LFT')
                   {
                     let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
+                    if(teamName.length > 7) teamName = truncateTeamName(teamName);
                     newDisplayName =`[${teamName}-${league}] ${oldDisplayName}`;
                   } else {
                     newDisplayName = `[LFT] ${oldDisplayName}`;
                   }
                   console.log(`setting username ${newDisplayName}`);
+                  if(newDisplayName.length > 25) newDisplayName = truncate(newDisplayName);
+                    
                   msg.member.setNickname(newDisplayName);
                 } catch(e) { msg.reply('Unable to set nickname, check with developer.') };
                 // 
-                // msg.reply(`users ESEA username ${oldDisplayName}`);
+                msg.reply(`users ESEA username ${oldDisplayName}`);
                 
                 removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
-                      msg.member.addRole(rankRole);
+                      // msg.member.addRole(rankRole);
                       if(leagueRole) msg.member.addRole(leagueRole);
-                      msg.reply('role(s) assigned, thanks!')
+                      // msg.reply('role(s) assigned, thanks!')
                   });
 
               } else {
@@ -64,6 +67,7 @@ client.on('message', msg => {
             done();
         }
     });
+    
     if (msg.channel.name == "role-assigner") {
        if (msg.content.indexOf("play.esea.net/users/") > -1) {
             humanoid.get(msg.content)
