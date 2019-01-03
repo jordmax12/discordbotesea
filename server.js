@@ -24,8 +24,8 @@ client.on('message', msg => {
                 console.log(error);
             } else {
               var $ = res.$;
-              let rank = $("#rankGraph h1 a").text().trim(),
-                  rRole = $("#rankGraph h1 a").text().trim().charAt(0),
+              let rank = $("#rankGraph h1").text().trim(),
+                  rRole = $("#rankGraph h1").text().trim().charAt(0),
                   league = mapLeague($('label:contains("League:")').siblings('.data').text()),
                   rankRole = msg.guild.roles.find(role => role.name.trim() === rRole),
                   leagueRole = msg.guild.roles.find(role => role.name.trim() === league);
