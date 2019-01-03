@@ -33,6 +33,9 @@ client.on('message', msg => {
 
                 let oldDisplayName = msg.member.displayName,
                     newDisplayName = msg.member.displayName; //default
+              
+                if(league == "Advanced") league = "Adv";
+                if(league == "Professional") league = "EPL";
                 
                 try {
                   oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('-')[0].trim();
