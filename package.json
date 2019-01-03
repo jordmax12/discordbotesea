@@ -3,9 +3,10 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "4.16.3",
-    "discord.js": "^11.4.2",
     "crawler": "^1.2.0",
+    "discord.js": "^11.4.2",
+    "dotenv": "^6.2.0",
+    "express": "4.16.3",
     "humanoid-js": "^1.0.1"
   }
 }

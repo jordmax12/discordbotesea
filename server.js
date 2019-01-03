@@ -5,6 +5,7 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 const Humanoid = require("humanoid-js");
 const humanoid = new Humanoid();
+require('dotenv').config()
 // Helpers
 const { mapLeague, removePastRoles } = require('./crawler-helper.js');
 
