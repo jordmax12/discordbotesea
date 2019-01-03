@@ -32,12 +32,12 @@ client.on('message', msg => {
 
               if(rankRole) {
                 let oldDisplayName = msg.member.displayName;
-                let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
-                let newDisplayName = league != 'LFT' 
-                     ? `[${teamName}-${league}] ${oldDisplayName}`
-                     : `[LFT] ${oldDisplayName}`;
+//                 let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
+//                 let newDisplayName = league != 'LFT' 
+//                      ? `[${teamName}-${league}] ${oldDisplayName}`
+//                      : `[LFT] ${oldDisplayName}`;
                 
-                msg.member.setNickname(newDisplayName);
+//                 msg.member.setNickname(newDisplayName);
                 
                 removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
