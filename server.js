@@ -14,7 +14,8 @@ client.login(process.env.BOT_TOKEN);
 client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
-        isBot = msg.author.bot;
+        isBot = msg.author.bot
+        // error = 1 / 0;
 
   if(!isBot) {
     var c = new Crawler({
@@ -31,13 +32,23 @@ client.on('message', msg => {
                   leagueRole = msg.guild.roles.find(role => role.name.trim() === league);
 
               if(rankRole) {
-                let oldDisplayName = msg.member.displayName;
-//                 let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
-//                 let newDisplayName = league != 'LFT' 
-//                      ? `[${teamName}-${league}] ${oldDisplayName}`
-//                      : `[LFT] ${oldDisplayName}`;
+                let oldDisplayName = msg.member.displayName,
+                    newDisplayName = msg.member.displayName; //default
                 
-//                 msg.member.setNickname(newDisplayName);
+                try {
+                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('-')[0].trim();
+                  if(league != 'LFT')
+                  {
+                    let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
+                    newDisplayName =`[${teamName}-${league}] ${oldDisplayName}`;
+                  } else {
+                    newDisplayName = `[LFT] ${oldDisplayName}`;
+                  }
+                  console.log(`setting username ${newDisplayName}`);
+                  msg.member.setNickname(newDisplayName);
+                } catch(e) { msg.reply('Unable to set nickname, check with developer.') };
+                // 
+                // msg.reply(`users ESEA username ${oldDisplayName}`);
                 
                 removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
