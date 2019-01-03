@@ -38,11 +38,11 @@ const removePastRoles = (rankRole, leagueRole, msg) => new Promise((resolve, rej
   //TODO: here you can check to see if all removeRoles are finished before resolving, but this should be fine for now.
   rankArr.filter(_rank => _rank != rankRole).map(_rank => {
     let role = msg.member.roles.find(role => role.name.trim() === _rank);
-    if(role) msg.member.removeRole(role)
+    if(role && role.name && role.name.trim() != rankRole) msg.member.removeRole(role)
   });
   leagueArr.filter(_league => _league != leagueRole).map((_league, idx, arr) => {
     let role = msg.member.roles.find(role => role.name.trim() === _league);
-    if(role) msg.member.removeRole(role);
+    if(role && role.name && role.name.trim() != leagueRole) msg.member.removeRole(role);
   });
   setTimeout(() => { resolve() }, 1000);
   //resolve();
