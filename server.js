@@ -26,12 +26,11 @@ client.on('message', msg => {
             } else {
               var $ = res.$;
               let rank = $("#rankGraph h1").text().trim(),
-                  rRole = $("#rankGraph h1").text().trim().charAt(0),
+                  rRole = $("#rankGraph h1").text().trim().charAt(0) || "Unranked",
                   league = mapLeague($('label:contains("League:")').siblings('.data').text()),
                   rankRole = msg.guild.roles.find(role => role.name.trim() === rRole),
                   leagueRole = msg.guild.roles.find(role => role.name.trim() === league);
 
-              if(rankRole) {
                 let oldDisplayName = msg.member.displayName,
                     newDisplayName = msg.member.displayName; //default
                 
@@ -61,10 +60,6 @@ client.on('message', msg => {
                       if(leagueRole) msg.member.addRole(leagueRole);
                       // msg.reply('role(s) assigned, thanks!')
                   });
-
-              } else {
-                msg.reply('Invalid rank');
-              }
             }
             done();
         }
