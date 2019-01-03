@@ -7,7 +7,7 @@ const Humanoid = require("humanoid-js");
 const humanoid = new Humanoid();
 require('dotenv').config()
 // Helpers
-const { mapLeague, removePastRoles } = require('./crawler-helper.js');
+const { mapLeague, removePastRoles, truncateTeamName, truncate } = require('./crawler-helper.js');
 
 client.login(process.env.BOT_TOKEN);
 
