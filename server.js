@@ -39,7 +39,7 @@ client.on('message', msg => {
                   oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('-')[0].trim();
                   if(league != 'LFT')
                   {
-                    let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
+                    let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].children[0].data;
                     if(teamName.length > 12) teamName = truncate(teamName, 12);
                     newDisplayName =`[${teamName}-${league}]`;
                     if(newDisplayName.length > 20) newDisplayName = truncate(newDisplayName, 20) + ']';
