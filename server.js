@@ -40,12 +40,15 @@ client.on('message', msg => {
                   if(league != 'LFT')
                   {
                     let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].attribs.name;
-                    if(teamName.length > 5) teamName = truncate(teamName, 5);
-                    newDisplayName =`[${teamName}-${league}] ${oldDisplayName}`;
+                    if(teamName.length > 12) teamName = truncate(teamName, 12);
+                    newDisplayName =`[${teamName}-${league}]`;
+                    if(newDisplayName.length > 20) newDisplayName = truncate(newDisplayName, 20) + ']';
+                    newDisplayName += `${newDisplayName} ${oldDisplayName}`;
+                    if(newDisplayName.length > 32) newDisplayName = truncate(newDisplayName, 30);
+
                   } else {
                     newDisplayName = `[LFT] ${oldDisplayName}`;
                   }
-                  if(newDisplayName.length > 24) newDisplayName = truncate(newDisplayName, 24) + ']';
                     
                   msg.member.setNickname(newDisplayName);
                 } catch(e) { msg.reply('Unable to set nickname, check with developer.'); console.log(e); };
