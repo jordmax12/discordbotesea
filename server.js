@@ -43,7 +43,7 @@ client.on('message', msg => {
                     if(teamName.length > 12) teamName = truncate(teamName, 12);
                     newDisplayName =`[${teamName}-${league}]`;
                     if(newDisplayName.length > 20) newDisplayName = truncate(newDisplayName, 20) + ']';
-                    newDisplayName += `${newDisplayName} ${oldDisplayName}`;
+                    newDisplayName = `${newDisplayName} ${oldDisplayName}`;
                     if(newDisplayName.length > 32) newDisplayName = truncate(newDisplayName, 30);
 
                   } else {
