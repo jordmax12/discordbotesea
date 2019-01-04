@@ -38,7 +38,7 @@ client.on('message', msg => {
                 if(league == "Professional") league = "EPL";
                 
                 try {
-                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('-')[0].trim();
+                  oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('- User')[0].trim();
                   if(league != 'LFT')
                   {
                     let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].children[0].data;
