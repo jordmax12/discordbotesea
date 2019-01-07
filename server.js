@@ -18,7 +18,7 @@ client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
         isBot = msg.author.bot,
-        scrimFormatPattern = /(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?)+ [\d/]+ .*((inferno)|(nuke)|(mirage)|(dust2)|(train)|(overpass)|(cache)|\/))/gims
+        scrimFormatPattern = /(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?)+ ((0?[1-9]|1[0-2])-(0?[1-9]|1[0-9]|2[0-9]|3[0-1]))+ [\d/]+ .*((inferno)|(nuke)|(mirage)|(dust2)|(train)|(overpass)|(cache)|\/))/gims
 
         // error = 1 / 0;
 
@@ -108,7 +108,7 @@ client.on('message', msg => {
           else errors.push(content);
         });
         
-        if(errors.length > 0) msg.reply(`One or more dates had an innvalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+        if(errors.length > 0) msg.reply(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
         else msg.reply('VERY NICE!');
       }
     }
