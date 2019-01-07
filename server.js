@@ -108,8 +108,10 @@ client.on('message', msg => {
           else errors.push(content);
         });
         
-        if(errors.length > 0) msg.reply(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
-        else msg.reply('VERY NICE!');
+        if(errors.length > 0) {
+          msg.delete();
+          msg.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+        }    
       }
     }
   }
