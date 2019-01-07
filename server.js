@@ -11,10 +11,9 @@ const { mapLeague, removePastRoles, truncate } = require('./crawler-helper.js');
 
 client.login(process.env.BOT_TOKEN);
 
-// client.on('ready') {
-//   client.user.setUsername("NA Scrims Bot"); 
-// }
-
+client.on('ready', () => {
+  client.user.setUsername("NA Scrims Bot"); 
+})
 client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
