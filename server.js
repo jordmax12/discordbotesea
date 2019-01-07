@@ -82,7 +82,7 @@ client.on('message', msg => {
         }
     } else if(msg.channel.name == 'regextest') {
       let result = msg.content.match(scrimFormatPattern);
-      if(result.length > 0 && result[0] != msg.content) msg.reply('invalid format')
+      if(!result || result.length == 0 || result[0] != msg.content) msg.reply('invalid format')
       else msg.reply('valid format');
     }
   }
