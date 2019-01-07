@@ -15,7 +15,7 @@ client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
         isBot = msg.author.bot,
-        scrimFormatPattern = /(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?)+ [\d/]+ .*((inferno)|(nuke)|(mirage)|(dust2)|(train)|(overpass)|(cache)|\/))/gim
+        scrimFormatPattern = /(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?)+ [\d/]+ .*((inferno)|(nuke)|(mirage)|(dust2)|(train)|(overpass)|(cache)|\/))/gims
 
         // error = 1 / 0;
 
