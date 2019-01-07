@@ -7,7 +7,7 @@ const Humanoid = require("humanoid-js");
 const humanoid = new Humanoid();
 require('dotenv').config()
 // Helpers
-const { mapLeague, removePastRoles, truncate } = require('./crawler-helper.js');
+const { mapLeague, removePastRoles, truncate, isValidDate, daysMap } = require('./crawler-helper.js');
 
 client.login(process.env.BOT_TOKEN);
 
@@ -83,10 +83,34 @@ client.on('message', msg => {
                     console.error(err)
                 })
         }
-    } else if(msg.channel.name == 'regextest') {
+    }else if(msg.channel.name == 'regextest') {
       let result = msg.content.match(scrimFormatPattern);
-      if(!result || result.length == 0 || result[0] != msg.content) msg.reply('invalid format')
-      else msg.reply('valid format');
+      
+      if(!result || result.length == 0 || result[0] != msg.content) msg.reply(`Invalid format. Please use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\noriginal message: ${msg.content}`)
+      else 
+      {
+        //TODO: HANDLE MULTI LINES!
+        console.log(escape(msg.content));
+        let escaped = escape(msg.content).split('%0A'),
+            errors = [];
+        escaped.map(e => {
+          let content = unescape(e);
+          let date = content.split(' ')[1].replace('-','/') + `/${(new Date()).getFullYear()}`,
+              day = content.split(' ')[0].toLowerCase();
+          if(isValidDate(date)) {
+            //make sure the date is the same day as the day provided
+            let _day = daysMap(day);
+            console.log(date);
+            let dateTest = new Date(date).getDay();
+            console.log(_day, dateTest);
+            if(_day != dateTest) errors.push(content);
+          } 
+          else errors.push(content);
+        });
+        
+        if(errors.length > 0) msg.reply(`One or more dates had an innvalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+        else msg.reply('VERY NICE!');
+      }
     }
   }
 })
