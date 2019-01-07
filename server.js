@@ -14,7 +14,9 @@ client.login(process.env.BOT_TOKEN);
 client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
-        isBot = msg.author.bot
+        isBot = msg.author.bot,
+        scrimFormatPattern = /(((monday|mon)|(tuesday|tue)|(wednesday|wed)|(thursday|thu)|(friday|fri)|(saturday|sat)|(sunday|sun))+ [\d/]+ .*((inferno)|(nuke)|(mirage)|(dust2)|(train)|(overpass)|(cache)|\/))/gim
+
         // error = 1 / 0;
 
   if(!isBot) {
@@ -78,6 +80,10 @@ client.on('message', msg => {
                     console.error(err)
                 })
         }
+    } else if(msg.channel.name == 'regextest') {
+      let result = msg.content.match(scrimFormatPattern);
+      if(result[0] != msg.content) msg.reply('invalid format')
+      else msg.reply('valid format');
     }
   }
 })
