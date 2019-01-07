@@ -86,7 +86,10 @@ client.on('message', msg => {
     }else if(msg.channel.name == 'regextest') {
       let result = msg.content.match(scrimFormatPattern);
       
-      if(!result || result.length == 0 || result[0] != msg.content) msg.reply(`Invalid format. Please use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\noriginal message: ${msg.content}`)
+      if(!result || result.length == 0 || result[0] != msg.content){
+        msg.delete();
+        msg.author.sendMessage(`Invalid format. Please use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\noriginal message: ${msg.content}`)
+      }
       else 
       {
         //TODO: HANDLE MULTI LINES!
