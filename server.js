@@ -82,7 +82,7 @@ client.on('message', msg => {
                 .catch(err => {
                     console.error(err)
                 })
-        } else if(msg.content.toLowerCase().indexOf("ty") > -1 || msg.content.toLowerCase().indexOf("thx") > -1 || (msg.content.toLowerCase().indexOf("nice job") > -1 || msg.content.toLowerCase().indexOf("thanks") > -1 || msg.content.toLowerCase().indexOf("thank you") > -1) {
+        } else if(msg.content.toLowerCase().indexOf("ty") > -1 || msg.content.toLowerCase().indexOf("thx") > -1 || msg.content.toLowerCase().indexOf("nice job") > -1 || msg.content.toLowerCase().indexOf("thanks") > -1 || msg.content.toLowerCase().indexOf("thank you") > -1) {
           msg.reply("You're welcome :)"); 
         }
     }else if(msg.channel.name == 'regextest') {
