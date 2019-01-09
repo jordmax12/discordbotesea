@@ -18,9 +18,7 @@ client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
         isBot = msg.author.bot,
-        scrimFormatPattern = /(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?)+ ((0?[1-9]|1[0-2])-(0?[1-9]|1[0-9]|2[0-9]|3[0-1]))+ ((1[012])(:|| )(00|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])? ?[aApP]m|(1[012])(:|| )(00|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])?)+ ((inferno)|(nuke)|(mirage)|(dust2)|(train)|(overpass)|(cache)|\/))/gims
-
-        // error = 1 / 0;
+        scrimFormatPattern = /((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-([0-2]?[1-9]|3[0-1]) ((0?[1-9]|1[012])([: ][0-5]?[0-9])? ?([aApP]m)? )+(inferno|nuke|mirage|dust2|train|overpass|cache|\/)/gims
 
   if(!isBot) {
     var c = new Crawler({
