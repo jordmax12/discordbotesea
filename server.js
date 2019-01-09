@@ -85,37 +85,33 @@ client.on('message', msg => {
 //           msg.reply("You're welcome :)"); 
 //         }
     }else if(msg.channel.name == 'regextest') {
-      let result = msg.content.match(scrimFormatPattern);
-      
-      if(!result || result.length == 0 || result[0] != msg.content){
-        msg.delete();
-        msg.author.sendMessage(`Invalid format. Please use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\noriginal message: ${msg.content}`)
-      }
-      else 
-      {
-        //TODO: HANDLE MULTI LINES!
-        console.log(escape(msg.content));
-        let escaped = escape(msg.content).split('%0A'),
-            errors = [];
-        escaped.map(e => {
-          let content = unescape(e);
-          let date = content.split(' ')[1].replace('-','/') + `/${(new Date()).getFullYear()}`,
-              day = content.split(' ')[0].toLowerCase();
-          if(isValidDate(date)) {
-            //make sure the date is the same day as the day provided
-            let _day = daysMap(day);
-            console.log(date);
-            let dateTest = new Date(date).getDay();
-            console.log(_day, dateTest);
-            if(_day != dateTest) errors.push(content);
-          } 
-          else errors.push(content);
-        });
-        
-        if(errors.length > 0) {
-          msg.delete();
-          msg.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
-        }    
+     let escaped = escape(msg.content).split('%0A'),
+          errors = [];
+          escaped.map(e => {
+              let content = unescape(e).trim();
+              console.log(content);
+            scrimFormatPattern.lastIndex = 0;
+              let regexResult = scrimFormatPattern.test(content);
+              console.log(regexResult);
+              if (!regexResult) {
+                  errors.push(content);
+              } else {
+                let date = content.split(' ')[1].replace('-', '/') + `/${(new Date()).getFullYear()}`,
+                  day = content.split(' ')[0].toLowerCase();
+                if (isValidDate(date)) {
+                    //make sure the date is the same day as the day provided
+                    let _day = daysMap(day);
+                    let dateTest = new Date(date).getDay();
+                    if (_day != dateTest) errors.push(content);
+                } else errors.push(content);
+              }
+
+          });
+
+          if (errors.length > 0) {
+              msg.delete();
+              msg.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+          }
       }
     }
   }
