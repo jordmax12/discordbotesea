@@ -18,7 +18,7 @@ client.on('message', msg => {
   const userId = msg.author.id,
         userName = msg.author.username,
         isBot = msg.author.bot,
-        scrimFormatPattern = /((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-([0-2]?[1-9]|3[0-1]) ((0?[1-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ \/]?)+(inferno|nuke|mirage|dust2|train|overpass|cache|\/)*/gims
+        scrimFormatPattern = /((((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ((0?[2-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ \/]?)+(inferno|nuke|mirage|dust2|train|overpass|cache|\/)*)\n?)+/gim
 
   if(!isBot) {
     var c = new Crawler({
@@ -110,7 +110,7 @@ client.on('message', msg => {
 
           if (errors.length > 0) {
               msg.delete();
-              msg.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTuesday 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+              msg.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTue 1-8 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
           }
     }
   }
