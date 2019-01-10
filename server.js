@@ -87,7 +87,7 @@ client.on('message', msg => {
       errors = getMessageErrors(msg);
       if (errors.length > 0) {
         msg.delete();
-        msg.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTue 1-8 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+        msg.author.sendMessage(`${errors[0]}\n\noriginal message:\n${msg.content}`);
       }
     }
   }
@@ -99,7 +99,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
     errors = getMessageErrors(newMessage);
     if (errors.length > 0) {
       newMessage.delete();
-      newMessage.author.sendMessage(`One or more dates had an invalid format.\n\nPlease use this example to format your message properly.\nTue 1-8 4/5/6/7 mirage/nuke\n\nnumber of errors ${errors.length}\n\noriginal message:\n${newMessage.content}`);
+      newMessage.author.sendMessage(`${errors[0]}\n\noriginal message:\n${newMessage.content}`);
     }
   }
 })
