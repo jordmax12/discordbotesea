@@ -52,8 +52,9 @@ const isValidDate = (dateString) =>
     var current = new Date(),
         passedDate = new Date(dateString);
 
-    if(isNaN(passedDate) || passedDate < current)
+    if(isNaN(passedDate) || passedDate > current)
         return false;
+    return true;
 };
 
 const truncate = (str, len) => {
