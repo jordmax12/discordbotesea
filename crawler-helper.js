@@ -1,23 +1,23 @@
 const mapLeague = (leagueText) => {
-  if(leagueText.indexOf('CSGO Open') > -1) {
-     return 'Open';
-  } else if(leagueText.indexOf('CSGO Int...') > -1) {
-     return 'IM';
-  } else if(leagueText.indexOf('CSGO Main') > -1) {
-     return 'Main';
-  } else if(leagueText.indexOf('CSGO Adv...') > -1) {
-     return 'Advanced';
-  } else if(leagueText.indexOf('CSGO MDL') > -1) {
-     return 'MDL';
-  } else if(leagueText.indexOf('CSGO Pro...') > -1) {
-     return 'Professional';
+  if (leagueText.indexOf('CSGO Open') > -1) {
+    return 'Open';
+  } else if (leagueText.indexOf('CSGO Int...') > -1) {
+    return 'IM';
+  } else if (leagueText.indexOf('CSGO Main') > -1) {
+    return 'Main';
+  } else if (leagueText.indexOf('CSGO Adv...') > -1) {
+    return 'Advanced';
+  } else if (leagueText.indexOf('CSGO MDL') > -1) {
+    return 'MDL';
+  } else if (leagueText.indexOf('CSGO Pro...') > -1) {
+    return 'Professional';
   } else {
-     return 'LFT';
+    return 'LFT';
   }
 }
 
 const daysMap = (str) => {
-  switch(str) {
+  switch (str) {
     case 'sun':
     case 'sunday':
       return 0;
@@ -42,24 +42,48 @@ const daysMap = (str) => {
   }
 }
 
-const isValidDate = (dateString) =>
-{
-    // First check for the pattern
-    if(!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
-        return false;
+const getMessageErrors = (msg) => {
+  let escaped = escape(msg.content).split('%0A'),
+    errors = [],
+    scrimFormatPattern = /(^(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ((0?[2-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ ,\/]?)+ ?(inferno|nuke|mirage|dust2|train|overpass|cache|\/)*)$)+/gim;
+  escaped.map(e => {
+    let content = unescape(e).trim();
+    scrimFormatPattern.lastIndex = 0;
+    let regexResult = scrimFormatPattern.test(content);
+    if (!regexResult) {
+      errors.push(content);
+    } else {
+      let date = content.split(' ')[1].replace('-', '/') + `/${(new Date()).getFullYear()}`,
+        day = content.split(' ')[0].toLowerCase();
+      if (isValidDate(date)) {
+        //make sure the date is the same day as the day provided
+        let _day = daysMap(day);
+        let dateTest = new Date(date).getDay();
+        if (_day != dateTest) errors.push(content);
+      } else errors.push(content);
+    }
+  });
 
-    // Check that it is not a past date and the passed date is valid
-    var current = new Date(),
-        passedDate = new Date(dateString);
+  return errors;
+};
 
-    if(isNaN(passedDate) || passedDate > current)
-        return false;
-    return true;
+const isValidDate = (dateString) => {
+  // First check for the pattern
+  if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
+    return false;
+
+  // Check that it is not a past date and the passed date is valid
+  var current = new Date(),
+    passedDate = new Date(dateString);
+
+  if (isNaN(passedDate) || passedDate > current)
+    return false;
+  return true;
 };
 
 const truncate = (str, len) => {
-    return str.length > len ? 
-    str.substring(0, len - 3) + "..." : 
+  return str.length > len ?
+    str.substring(0, len - 3) + "..." :
     str;
 }
 
@@ -85,17 +109,18 @@ const removePastRoles = (rankRole, leagueRole, msg) => new Promise((resolve, rej
   //TODO: here you can check to see if all removeRoles are finished before resolving, but this should be fine for now.
   rankArr.filter(_rank => _rank != rankRole).map(_rank => {
     let role = msg.member.roles.find(role => role.name.trim() === _rank);
-    if(role && role.name && role.name.trim() != rankRole) msg.member.removeRole(role)
+    if (role && role.name && role.name.trim() != rankRole) msg.member.removeRole(role)
   });
   leagueArr.filter(_league => _league != leagueRole).map((_league, idx, arr) => {
     let role = msg.member.roles.find(role => role.name.trim() === _league);
-    if(role && role.name && role.name.trim() != leagueRole) msg.member.removeRole(role);
+    if (role && role.name && role.name.trim() != leagueRole) msg.member.removeRole(role);
   });
   setTimeout(() => { resolve() }, 1000);
   //resolve();
 })
 
 module.exports = {
+  getMessageErrors,
   isValidDate,
   daysMap,
   mapLeague,
