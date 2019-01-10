@@ -51,7 +51,7 @@ const getMessageErrors = (msg) => {
     scrimFormatPattern.lastIndex = 0;
     let regexResult = scrimFormatPattern.test(content);
     if (!regexResult) {
-      errors.push(content);
+      errors.push("Your message was formatted incorrectly. Please use 'Tuesday 1-10 5/6/7 dust2' as an example.");
     } else {
       let date = content.split(' ')[1].replace('-', '/') + `/${(new Date()).getFullYear()}`,
         day = content.split(' ')[0].toLowerCase();
@@ -59,8 +59,8 @@ const getMessageErrors = (msg) => {
         //make sure the date is the same day as the day provided
         let _day = daysMap(day);
         let dateTest = new Date(date).getDay();
-        if (_day != dateTest) errors.push(content);
-      } else errors.push(content);
+        if (_day != dateTest) errors.push("The day and date you supplied do not match. Please check the calendar.");
+      } else errors.push("The date you supplied is either in the past or not a valid date.");
     }
   });
 
