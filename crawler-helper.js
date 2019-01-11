@@ -75,7 +75,7 @@ const isValidDate = (dateString) => {
   // Check that it is not a past date and the passed date is valid
   var current = new Date(),
     passedDate = new Date(dateString);
-
+  current.setHours(0,0,0,0);
   if (isNaN(passedDate) || passedDate < current)
     return false;
   return true;
