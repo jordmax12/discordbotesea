@@ -82,7 +82,7 @@ client.on('message', msg => {
       //       else if(msg.content.toLowerCase().indexOf("awesome") > -1 || msg.content.toLowerCase().indexOf("great job") > -1 || msg.content.toLowerCase().indexOf("ty") > -1 || msg.content.toLowerCase().indexOf("thx") > -1 || msg.content.toLowerCase().indexOf("nice job") > -1 || msg.content.toLowerCase().indexOf("thanks") > -1 || msg.content.toLowerCase().indexOf("thank you") > -1) {
       //           msg.reply("You're welcome :)"); 
       //         }
-    } else if (msg.channel.name == 'regextest') {
+    } else if (msg.channel.name.toLowerCase() == 'pro' || msg.channel.name.toLowerCase() == 'advanced' || msg.channel.name.toLowerCase() == 'mdl' || msg.channel.name.toLowerCase() == 'main' || msg.channel.name.toLowerCase() == 'im' || msg.chsnnel.name.toLowerCase() == 'open') {
       let errors = [];
       errors = getMessageErrors(msg);
       if (errors.length > 0) {
@@ -94,7 +94,7 @@ client.on('message', msg => {
 })
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
-  if (oldMessage.channel.name == 'regextest') {
+  if (newMessage.channel.name.toLowerCase() == 'pro' || newMessage.channel.name.toLowerCase() == 'advanced' || newMessage.channel.name.toLowerCase() == 'mdl' || newMessage.channel.name.toLowerCase() == 'main' || newMessage.channel.name.toLowerCase() == 'im' || newMessage.chsnnel.name.toLowerCase() == 'open') {
     let errors = [];
     errors = getMessageErrors(newMessage);
     if (errors.length > 0) {
