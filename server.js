@@ -88,6 +88,7 @@ client.on('message', msg => {
       if (errors.length > 0) {
         msg.delete();
         msg.author.sendMessage(`${errors[0]}\n\noriginal message:\n${msg.content}`);
+        client.channels.get('532974153264005130').send(msg.content);
       }
     }
   }
