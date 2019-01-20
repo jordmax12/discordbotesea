@@ -88,7 +88,7 @@ client.on('message', msg => {
       if (errors.length > 0) {
         msg.delete();
         msg.author.sendMessage(`${errors[0]}\n\noriginal message:\n${msg.content}`);
-        client.channels.get('532974153264005130').send(`message: ${msg.content} from: ${msg.member.displayName}`);
+        client.channels.get('532974153264005130').send(`[NEW] message: ${msg.content} from: ${msg.member.displayName}`);
       }
     }
   }
@@ -101,7 +101,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
     if (errors.length > 0) {
       newMessage.delete();
       newMessage.author.sendMessage(`${errors[0]}\n\noriginal message:\n${newMessage.content}`);
-      client.channels.get('532974153264005130').send(`message: ${newMessage.content} from: ${newMessage.member.displayName}`);
+      client.channels.get('532974153264005130').send(`[EDIT] message: ${newMessage.content} from: ${newMessage.member.displayName}`);
     }
   }
 })
