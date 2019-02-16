@@ -16,6 +16,99 @@ const mapLeague = (leagueText) => {
   }
 }
 
+
+const getTomorrowDate = () => {
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow;
+}
+
+const deleteMessage = message => new Promise((resolve, reject) => {
+    console.log(message.author);
+    if (!message.deleted || !message.pinned || !message.author.bot || message.author.id != '267704447361089537' || message.author.id != '92646182978859008' || message.author.id != '182190078104174593' || message.author.id != '272506696708915200' || message.author.id != '154052900073635840' || message.author.id != '106830419600666624' || message.author.id != '223597518926118913' || message.author.id != '90615098611109888') {
+        message.delete()
+            .then(() => resolve())
+            .catch(err => resolve(err));
+    }
+});
+
+const messageHandler = (message, pattern) => new Promise((resolve, reject) => {
+    if (!message.author.isBot && message.content.indexOf('@') == -1 && message.content.match(pattern)) {
+        let escaped = escape(message.content).split('%0A');
+        escaped.map((e, idx, arr) => {
+            let content = unescape(e);
+            if (content.indexOf(' ') == -1) message.delete();
+            else {
+                let date = content.split(' ')[1].replace('-', '/') + `/${(new Date()).getFullYear()}`,
+                    day = content.split(' ')[0].toLowerCase();
+
+                let nD = new Date(date);
+                let now = new Date();
+
+                function days(d1, d2) {
+                    var t2 = d2.getTime();
+                    var t1 = d1.getTime();
+
+                    return parseInt((t2 - t1) / (24 * 3600 * 1000));
+                }
+                var daysDiff = days(now, nD);
+                if (isNaN(daysDiff) || 0 > daysDiff) {
+                    console.log('deleting message', content);
+                    deleteMessage(message);
+                }
+
+                if (idx + 1 == arr.length) {
+                    //use last message id as after in new call to see if there's any more messages
+                    resolve();
+                }
+            }
+
+        });
+    } else {
+        resolve();
+    }
+
+});
+
+const getMessages = (channel, after) => new Promise(async (resolve, reject) => {
+    if (!channel) reject('channel required');
+    let options = {
+        limit: 100
+    }
+
+    if (after) options['after'] = after;
+    let results = await channel.fetchMessages(options);
+    resolve(results);
+});
+
+const checkMessages = (client, channelId, pattern, millis) => new Promise((resolve, reject) => {
+    var channel = client.channels.get(channelId);
+
+    setTimeout(async () => {
+        let action = async (messages) => {
+          if(messages.length == 0) resolve('finished')
+            for (var i = 0; i < messages.length; i++) {
+                let message = messages[i];
+                await messageHandler(message)
+                if (i + 1 == messages.length) {
+                    //use last message id as after in new call to see if there's any more messages
+                    let lastMessage = messages[messages.length - 1];
+                    console.log('fetching more messages');
+                    let test = await channel.fetchMessages({
+                        limit: 100,
+                        before: lastMessage.id
+                    });
+                    action(test.clone().array())
+                }
+            }
+        }
+        let _messages = await getMessages(channel);
+
+        let msgs = _messages.clone().array();
+        action(msgs);
+    }, millis);
+});
+
 const daysMap = (str) => {
   switch (str) {
     case 'sun':
@@ -121,12 +214,14 @@ const removePastRoles = (rankRole, leagueRole, msg) => new Promise((resolve, rej
 })
 
 module.exports = {
-  getMessageErrors,
-  isValidDate,
-  daysMap,
-  mapLeague,
-  rankArr,
-  leagueArr,
-  removePastRoles,
-  truncate
+    getMessageErrors,
+    getTomorrowDate,
+    isValidDate,
+    daysMap,
+    mapLeague,
+    rankArr,
+    leagueArr,
+    removePastRoles,
+    truncate,
+    checkMessages
 }
