@@ -7,7 +7,16 @@ const Humanoid = require("humanoid-js");
 const humanoid = new Humanoid();
 require('dotenv').config()
 // Helpers
-const { mapLeague, removePastRoles, truncate, isValidDate, getMessageErrors, daysMap } = require('./crawler-helper.js');
+const {
+    mapLeague,
+    removePastRoles,
+    truncate,
+    isValidDate,
+    getMessageErrors,
+    daysMap,
+    checkMessages,
+    getTomorrowDate
+} = require('./crawler-helper.js');
 
 client.login(process.env.BOT_TOKEN);
 
