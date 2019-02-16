@@ -11,8 +11,29 @@ const { mapLeague, removePastRoles, truncate, isValidDate, getMessageErrors, day
 
 client.login(process.env.BOT_TOKEN);
 
+var tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+var t = new Date()
+
+var diff = tomorrow - t;
+
+let days = [];
+
+days.push(tomorrow);
+
+const setUpCleanup = async (channelId, _diff) => {
+  await checkMessages(client, channelId, scrimFormatPattern, _diff);
+  let _tomorrow = getTomorrowDate();
+  let now = new Date();
+  
+  let difference = _tomorrow - now;
+  console.log(`Scheduling a clean up in ${difference} milliseconds`);
+  setUpCleanup(channelId, difference);
+}
+
 client.on('ready', () => {
   client.user.setUsername("NA Scrims Bot");
+  setUpCleanup('531675700944568321', diff);
 })
 client.on('message', msg => {
   const userId = msg.author.id,
