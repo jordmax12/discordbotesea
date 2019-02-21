@@ -37,14 +37,14 @@ const setUpCleanup = async (channelId, _diff) => {
   
   let difference = _tomorrow - now;
   console.log(`Scheduling a clean up in ${difference} milliseconds`);
-  setUpCleanup(channelId, 0);
+  setUpCleanup(channelId, diff);
 }
 
 client.login(process.env.BOT_TOKEN);
 client.on('ready', () => {
     client.user.setUsername("NA Scrims Bot");
     //(client, channelId, pattern, millis) 
-    setUpCleanup('531689804921044992', diff)
+    setUpCleanup('531689804921044992', 0)
 })
 client.on('message', msg => {
     const userId = msg.author.id,
