@@ -62,8 +62,8 @@ client.on('message', msg => {
               .then(data => {
                 let alias = data.alias;
                 data = data.data;
+                var newDisplayName = '';
                 let rank           = data.rank.current,
-                    newDisplayName = '',
                     leagueName = '',
                     rankRole = msg.guild.roles.find(role => role.name.trim() === rank.charAt(0));
                 var leagueRole;
