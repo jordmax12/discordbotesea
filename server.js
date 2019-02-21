@@ -82,6 +82,7 @@ client.on('message', msg => {
                         // console.log(leagueName, tag, alias);
                       if(leagueName.indexOf('CSGO') > -1) leagueName = leagueName.split('CSGO ')[1];
                       newDisplayName = `[${tag}-${leagueName}] ${alias}`;
+                    console.log('here', newDisplayName);
                       leagueRole = msg.guild.roles.find(role => role.name.trim() === leagueName);
 
                     })
