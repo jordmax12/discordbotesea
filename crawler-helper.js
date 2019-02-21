@@ -80,7 +80,6 @@ const getTomorrowDate = () => {
 }
 
 const deleteMessage = message => new Promise((resolve, reject) => {
-    console.log(message.author);
     // if (!message.deleted || !message.pinned || !message.author.bot || message.author.id != '267704447361089537' || message.author.id != '92646182978859008' || message.author.id != '182190078104174593' || message.author.id != '272506696708915200' || message.author.id != '154052900073635840' || message.author.id != '106830419600666624' || message.author.id != '223597518926118913' || message.author.id != '90615098611109888') {
         message.delete()
             .then(() => resolve())
@@ -109,7 +108,6 @@ const messageHandler = (message, pattern) => new Promise((resolve, reject) => {
                 }
                 var daysDiff = days(now, nD);
                 if (isNaN(daysDiff) || 0 > daysDiff) {
-                    console.log('deleting message', content);
                     deleteMessage(message);
                 }
 
@@ -204,12 +202,10 @@ const getMessageErrors = (msg) => {
         } else {
             let date = content.split(' ')[1].replace('-', '/') + `/${(new Date()).getFullYear()}`,
                 day = content.split(' ')[0].toLowerCase();
-            console.log(isValidDate(date));
             if (isValidDate(date)) {
                 //make sure the date is the same day as the day provided
                 let _day = daysMap(day);
                 let dateTest = new Date(date).getDay();
-                console.log(_day, dateTest);
                 if (_day != dateTest) errors.push("The day and date you supplied do not match. Please check the calendar.");
             } else errors.push("The date you supplied is either in the past or not a valid date.");
         }
@@ -228,8 +224,6 @@ const isValidDate = (dateString) => {
         passedDate = new Date(dateString);
     current.setHours(current.getHours() - 8);
     current.setHours(0, 0, 0, 0);
-    console.log(current);
-    console.log(passedDate);
     if (isNaN(passedDate) || passedDate < current)
         return false;
     return true;
