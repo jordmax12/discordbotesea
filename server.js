@@ -90,8 +90,9 @@ client.on('message', msg => {
                     
                 } else {
                   newDisplayName = `[LFT] ${alias}`;
-                  console.log(newDisplayName);
+                  
                 }
+               console.log(newDisplayName);
                msg.member.setNickname(newDisplayName);
                removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
