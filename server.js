@@ -6,7 +6,6 @@ const client = new Discord.Client()
 const Humanoid = require("humanoid-js");
 const humanoid = new Humanoid();
 require('dotenv').config();
-var test = "test";
 // Helpers
 const {
     mapLeague,
