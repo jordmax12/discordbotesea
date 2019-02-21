@@ -1,65 +1,131 @@
 // this is the way to load a package with NodeJS
-const express = require("express");
+const express = require("express")
 const Crawler = require("crawler");
 const Discord = require('discord.js')
 const client = new Discord.Client()
-const Humanoid = require("humanoid-js");
-const humanoid = new Humanoid();
-require('dotenv').config()
+require('dotenv').config();
+
 // Helpers
-const { mapLeague, removePastRoles } = require('./crawler-helper.js');
+const {
+    mapLeague,
+    removePastRoles,
+    truncate,
+    isValidDate,
+    getMessageErrors,
+    daysMap,
+    checkMessages,
+    getTomorrowDate,
+    fetchUserData,
+    getTeamTag
+} = require('./crawler-helper.js');
+const scrimFormatPattern = /(^(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ((0?[2-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ ,\/]?)+ ?(inferno|nuke|mirage|dust2|train|overpass|cache|\/)*)$)+/gim;
+
+var tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+var t = new Date()
+
+var diff = tomorrow - t;
+
+let days = [];
+
+days.push(tomorrow);
+
+const setUpCleanup = async (channelId, _diff) => {
+  await checkMessages(client, channelId, scrimFormatPattern, _diff);
+  let _tomorrow = getTomorrowDate();
+  let now = new Date();
+  
+  let difference = _tomorrow - now;
+  console.log(`Scheduling a clean up in ${difference} milliseconds`);
+  setUpCleanup(channelId, difference);
+}
 
 client.login(process.env.BOT_TOKEN);
-
+client.on('ready', () => {
+    client.user.setUsername("NA Scrims Bot");
+    //(client, channelId, pattern, millis) 
+    setUpCleanup('531689804921044992', diff)
+})
 client.on('message', msg => {
-  const userId = msg.author.id,
+    const userId = msg.author.id,
         userName = msg.author.username,
-        isBot = msg.author.bot;
+        isBot = msg.author.bot
 
-  if(!isBot) {
-    var c = new Crawler({
-        maxConnections: 10,
-        callback: function (error, res, done) {
-            if (error) {
-                console.log(error);
-            } else {
-              var $ = res.$;
-              let rank = $("#rankGraph h1 a").text().trim(),
-                  rRole = $("#rankGraph h1 a").text().trim().charAt(0),
-                  league = mapLeague($('label:contains("League:")').siblings('.data').text()),
-                  rankRole = msg.guild.roles.find(role => role.name.trim() === rRole),
-                  leagueRole = msg.guild.roles.find(role => role.name.trim() === league);
+    if (!isBot) {
 
-              if(rankRole) {
-                removePastRoles(rankRole, leagueRole, msg)
+        if (msg.channel.name == "role-assigner") {
+            if (msg.content.indexOf("play.esea.net/users/") > -1) {
+              let eseaId = msg.content.split('play.esea.net/users/')[1];
+              if(eseaId.indexOf('/') > -1) eseaId = eseaId.split('/')[0];
+              console.log(eseaId);
+              fetchUserData(eseaId)
+              .then(data => {
+                let alias = data.alias;
+                data = data.data;
+                let rank           = data.rank.current,
+                    newDisplayName = '',
+                    leagueName = '',
+                    rankRole = msg.guild.roles.find(role => role.name.trim() === rank.charAt(0));
+                var leagueRole;
+                if(data.league)
+                {
+                    let league = data.league[0],
+                    teamName   = league.team.name || '',
+                    teamId     = league.team.id || 0;
+                  
+                  leagueName = league.league.name || ''
+                  
+                  if(teamId != 0)
+                  {
+                    getTeamTag(teamId)
+                    .then(tag => {
+                        // console.log(leagueName, tag, alias);
+                      if(leagueName.indexOf('CSGO') > -1) leagueName = leagueName.split('CSGO ')[1];
+                      newDisplayName = `[${tag}-${leagueName}] ${alias}`;
+                      leagueRole = msg.guild.roles.find(role => role.name.trim() === leagueName);
+
+                    })
+                    .catch(e => console.log(e))
+                  }
+                    
+                } else {
+                  newDisplayName = `[LFT] ${alias}`;
+                  console.log(newDisplayName);
+                }
+               msg.member.setNickname(newDisplayName);
+               removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
                       msg.member.addRole(rankRole);
-                      if(leagueRole) msg.member.addRole(leagueRole);
+                      if (leagueRole) msg.member.addRole(leagueRole);
                       msg.reply('role(s) assigned, thanks!')
                   });
 
-              } else {
-                msg.reply('Invalid rank');
-              }
+
+              })
             }
-            done();
-        }
-    });
-    if (msg.channel.name == "role-assigner") {
-       if (msg.content.indexOf("play.esea.net/users/") > -1) {
-            humanoid.get(msg.content)
-                .then(res => {
-                    c.queue([{
-                        html: res.body
-                    }]);
-                })
-                .catch(err => {
-                    console.error(err)
-                })
+        } else if (msg.channel.name == 'regextest') {
+            let errors = [];
+            errors = getMessageErrors(msg);
+            if (errors.length > 0) {
+                msg.delete();
+                client.channels.get('536432815357558786').send(`message: ${msg.content} from: ${msg.member.displayName}`);
+                msg.author.sendMessage(`${errors[0]}\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+            }
         }
     }
-  }
 })
+
+client.on('messageUpdate', (oldMessage, newMessage) => {
+    if (oldMessage.channel.name == 'regextest') {
+        let errors = [];
+        errors = getMessageErrors(newMessage);
+        if (errors.length > 0) {
+            newMessage.delete();
+            newMessage.author.sendMessage(`${errors[0]}\n\nnumber of errors ${errors.length}\n\noriginal message:\n${newMessage.content}`);
+        }
+    }
+})
+
 
 // create an express object: a Web server
 var app = express();
@@ -68,13 +134,13 @@ var app = express();
 // so we are defining "routes" the server follows to return the right data.
 // When the server gets a request for the "root" route of this domain: "/"
 // here: "https://hello-node-server.glitch.me/"
-app.get("/", function (request, response) {
+app.get("/", function(request, response) {
     // we program the server to respond with an HTML string
     response.send("<h1>Hello :)</h1><p><a href='/about'>About</a></p>");
 });
 
 // when the server gets a request for "https://hello-node-server.glitch.me/about"
-app.get("/about", function (request, response) {
+app.get("/about", function(request, response) {
     response.send("<h1>This is my about page</h1><a href='/'>Home</a></p>");
 });
 

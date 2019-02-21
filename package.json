@@ -8,6 +8,7 @@
     "discord.js": "^11.4.2",
     "dotenv": "^6.2.0",
     "express": "4.16.3",
-    "humanoid-js": "^1.0.1"
+    "humanoid-js": "^1.0.1",
+    "node-fetch": "^2.3.0"
   }
 }
