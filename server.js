@@ -37,7 +37,7 @@ const setUpCleanup = async (channelId, _diff) => {
   
   let difference = _tomorrow - now;
   console.log(`Scheduling a clean up in ${difference} milliseconds`);
-  setUpCleanup(channelId, difference);
+  setUpCleanup(channelId, 0);
 }
 
 client.login(process.env.BOT_TOKEN);
@@ -81,7 +81,8 @@ client.on('message', msg => {
                     .then(tag => {
                         // console.log(leagueName, tag, alias);
                       if(leagueName.indexOf('CSGO') > -1) leagueName = leagueName.split('CSGO ')[1];
-                      newDisplayName = `[${tag}-${leagueName}] ${alias}`;
+                      let displayLeagueName = leagueName == "Intermediate" ? "IM" : leagueName;
+                      newDisplayName = `[${tag}-${displayLeagueName}] ${alias}`;
                       msg.member.setNickname(newDisplayName);
                       leagueRole = msg.guild.roles.find(role => role.name.trim() === leagueName);
 
