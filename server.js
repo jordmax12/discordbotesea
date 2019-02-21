@@ -44,7 +44,7 @@ client.login(process.env.BOT_TOKEN);
 client.on('ready', () => {
     client.user.setUsername("NA Scrims Bot");
     //(client, channelId, pattern, millis) 
-    setUpCleanup('531689804921044992', 0)
+    setUpCleanup('531675700944568321', 0)
 })
 client.on('message', msg => {
     const userId = msg.author.id,
