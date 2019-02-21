@@ -1,11 +1,10 @@
 // this is the way to load a package with NodeJS
-const express = require("express");
+const express = require("express")
 const Crawler = require("crawler");
 const Discord = require('discord.js')
 const client = new Discord.Client()
-const Humanoid = require("humanoid-js");
-const humanoid = new Humanoid();
 require('dotenv').config();
+
 // Helpers
 const {
     mapLeague,
@@ -15,11 +14,11 @@ const {
     getMessageErrors,
     daysMap,
     checkMessages,
-    getTomorrowDate
+    getTomorrowDate,
+    fetchUserData,
+    getTeamTag
 } = require('./crawler-helper.js');
 const scrimFormatPattern = /(^(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ((0?[2-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ ,\/]?)+ ?(inferno|nuke|mirage|dust2|train|overpass|cache|\/)*)$)+/gim;
-
-client.login(process.env.BOT_TOKEN);
 
 var tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -41,100 +40,90 @@ const setUpCleanup = async (channelId, _diff) => {
   setUpCleanup(channelId, difference);
 }
 
+client.login(process.env.BOT_TOKEN);
 client.on('ready', () => {
-  client.user.setUsername("NA Scrims Bot");
-  setUpCleanup('531675700944568321', diff);
+    client.user.setUsername("NA Scrims Bot");
+    //(client, channelId, pattern, millis) 
+    setUpCleanup('531689804921044992', diff)
 })
 client.on('message', msg => {
-  const userId = msg.author.id,
-    userName = msg.author.username,
-    isBot = msg.author.bot
+    const userId = msg.author.id,
+        userName = msg.author.username,
+        isBot = msg.author.bot
 
-  if (!isBot) {
-    var c = new Crawler({
-      maxConnections: 10,
-      callback: function (error, res, done) {
-        if (error) {
-          console.log(error);
-        } else {
-          var $ = res.$;
-          let rank = $("#rankGraph h1").text().trim(),
-            rRole = $("#rankGraph h1").text().trim().charAt(0) || "Unranked",
-            league = mapLeague($('label:contains("League:")').siblings('.data').text()),
-            rankRole = msg.guild.roles.find(role => role.name.trim() === rRole),
-            leagueRole = msg.guild.roles.find(role => role.name.trim() === league);
+    if (!isBot) {
 
-          let oldDisplayName = msg.member.displayName,
-            newDisplayName = msg.member.displayName; //default
+        if (msg.channel.name == "role-assigner") {
+            if (msg.content.indexOf("play.esea.net/users/") > -1) {
+              let eseaId = msg.content.split('play.esea.net/users/')[1];
+              if(eseaId.indexOf('/') > -1) eseaId = eseaId.split('/')[0];
+              console.log(eseaId);
+              fetchUserData(eseaId)
+              .then(data => {
+                let alias = data.alias;
+                data = data.data;
+                let rank           = data.rank.current,
+                    newDisplayName = '',
+                    leagueName = '',
+                    rankRole = msg.guild.roles.find(role => role.name.trim() === rank.charAt(0));
+                var leagueRole;
+                if(data.league)
+                {
+                    let league = data.league[0],
+                    teamName   = league.team.name || '',
+                    teamId     = league.team.id || 0;
+                  
+                  leagueName = league.league.name || ''
+                  
+                  if(teamId != 0)
+                  {
+                    getTeamTag(teamId)
+                    .then(tag => {
+                        // console.log(leagueName, tag, alias);
+                      if(leagueName.indexOf('CSGO') > -1) leagueName = leagueName.split('CSGO ')[1];
+                      newDisplayName = `[${tag}-${leagueName}] ${alias}`;
+                      leagueRole = msg.guild.roles.find(role => role.name.trim() === leagueName);
 
-          if (league == "Advanced") league = "Adv";
-          if (league == "Professional") league = "EPL";
+                    })
+                    .catch(e => console.log(e))
+                  }
+                    
+                } else {
+                  newDisplayName = `[LFT] ${alias}`;
+                  console.log(newDisplayName);
+                }
+               msg.member.setNickname(newDisplayName);
+               removePastRoles(rankRole, leagueRole, msg)
+                  .then(() => {
+                      msg.member.addRole(rankRole);
+                      if (leagueRole) msg.member.addRole(leagueRole);
+                      msg.reply('role(s) assigned, thanks!')
+                  });
 
-          try {
-            oldDisplayName = $('#upanel-profile header')[0].children[0].data.split('- User')[0].trim();
-            if (league != 'LFT') {
-              let teamName = $('label:contains("League:")').siblings('.data').find('a[href^="/teams"]')[0].children[0].data;
-              if (teamName.length > 12) teamName = truncate(teamName, 12);
-              newDisplayName = `[${teamName}-${league}]`;
-              if (newDisplayName.length > 20) newDisplayName = truncate(newDisplayName, 20) + ']';
-              newDisplayName = `${newDisplayName} ${oldDisplayName}`;
-              if (newDisplayName.length > 32) newDisplayName = truncate(newDisplayName, 30);
 
-            } else {
-              newDisplayName = `[LFT] ${oldDisplayName}`;
+              })
             }
-
-            msg.member.setNickname(newDisplayName);
-          } catch (e) { msg.reply('Unable to set nickname, check with developer.'); console.log(e); };
-
-          removePastRoles(rankRole, leagueRole, msg)
-            .then(() => {
-              msg.member.addRole(rankRole);
-              if (leagueRole) msg.member.addRole(leagueRole);
-              msg.reply('role(s) assigned, thanks!')
-            });
+        } else if (msg.channel.name == 'regextest') {
+            let errors = [];
+            errors = getMessageErrors(msg);
+            if (errors.length > 0) {
+                msg.delete();
+                client.channels.get('536432815357558786').send(`message: ${msg.content} from: ${msg.member.displayName}`);
+                msg.author.sendMessage(`${errors[0]}\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
+            }
         }
-        done();
-      }
-    });
-
-    if (msg.channel.name == "role-assigner") {
-      if (msg.content.indexOf("play.esea.net/users/") > -1) {
-        humanoid.get(msg.content)
-          .then(res => {
-            c.queue([{
-              html: res.body
-            }]);
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      }
-      //       else if(msg.content.toLowerCase().indexOf("awesome") > -1 || msg.content.toLowerCase().indexOf("great job") > -1 || msg.content.toLowerCase().indexOf("ty") > -1 || msg.content.toLowerCase().indexOf("thx") > -1 || msg.content.toLowerCase().indexOf("nice job") > -1 || msg.content.toLowerCase().indexOf("thanks") > -1 || msg.content.toLowerCase().indexOf("thank you") > -1) {
-      //           msg.reply("You're welcome :)"); 
-      //         }
-    } else if (msg.channel.name == 'regextest' ||  msg.channel.name == 'pro' || msg.channel.name == 'advanced' || msg.channel.name == 'mdl' || msg.channel.name == 'main' || msg.channel.name == 'im' || msg.channel.name == 'open') {
-      let errors = [];
-      errors = getMessageErrors(msg);
-      if (errors.length > 0) {
-        msg.delete();
-        msg.author.sendMessage(`${errors[0]}\n\noriginal message:\n${msg.content}`);
-        client.channels.get('532974153264005130').send(`[NEW] message: ${msg.content} from: ${msg.member.displayName}`);
-      }
     }
-  }
 })
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
-  if (newMessage.channel.name == 'regextest' ||  newMessage.channel.name == 'pro' || newMessage.channel.name  == 'advanced' || newMessage.channel.name == 'mdl' || newMessage.channel.name == 'main' || newMessage.channel.name == 'im' || newMessage.channel.name == 'open') {
-    let errors = [];
-    errors = getMessageErrors(newMessage);
-    if (errors.length > 0) {
-      newMessage.delete();
-      newMessage.author.sendMessage(`${errors[0]}\n\noriginal message:\n${newMessage.content}`);
-      client.channels.get('532974153264005130').send(`[EDIT] message: ${newMessage.content} from: ${newMessage.member.displayName}`);
+    if (oldMessage.channel.name == 'regextest') {
+        let errors = [];
+        errors = getMessageErrors(newMessage);
+        if (errors.length > 0) {
+            newMessage.delete();
+            newMessage.author.sendMessage(`${errors[0]}\n\nnumber of errors ${errors.length}\n\noriginal message:\n${newMessage.content}`);
+        }
     }
-  }
 })
 
 
@@ -145,14 +134,14 @@ var app = express();
 // so we are defining "routes" the server follows to return the right data.
 // When the server gets a request for the "root" route of this domain: "/"
 // here: "https://hello-node-server.glitch.me/"
-app.get("/", function (request, response) {
-  // we program the server to respond with an HTML string
-  response.send("<h1>Hello :)</h1><p><a href='/about'>About</a></p>");
+app.get("/", function(request, response) {
+    // we program the server to respond with an HTML string
+    response.send("<h1>Hello :)</h1><p><a href='/about'>About</a></p>");
 });
 
 // when the server gets a request for "https://hello-node-server.glitch.me/about"
-app.get("/about", function (request, response) {
-  response.send("<h1>This is my about page</h1><a href='/'>Home</a></p>");
+app.get("/about", function(request, response) {
+    response.send("<h1>This is my about page</h1><a href='/'>Home</a></p>");
 });
 
 // finally we tell the server to listen for requests
