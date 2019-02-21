@@ -82,7 +82,7 @@ client.on('message', msg => {
                         // console.log(leagueName, tag, alias);
                       if(leagueName.indexOf('CSGO') > -1) leagueName = leagueName.split('CSGO ')[1];
                       newDisplayName = `[${tag}-${leagueName}] ${alias}`;
-                    console.log('here', newDisplayName);
+                      msg.member.setNickname(newDisplayName);
                       leagueRole = msg.guild.roles.find(role => role.name.trim() === leagueName);
 
                     })
@@ -91,10 +91,8 @@ client.on('message', msg => {
                     
                 } else {
                   newDisplayName = `[LFT] ${alias}`;
-                  
+                  msg.member.setNickname(newDisplayName);
                 }
-               console.log(newDisplayName);
-               msg.member.setNickname(newDisplayName);
                removePastRoles(rankRole, leagueRole, msg)
                   .then(() => {
                       msg.member.addRole(rankRole);
