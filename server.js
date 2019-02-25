@@ -104,7 +104,7 @@ client.on('message', msg => {
 
               })
             }
-        } else if (msg.channel.name == 'mdl' || msg.channel.name == 'advanced' || msg.channel.name == 'main' || msg.channel.name == 'im' || msg.channel.name == 'open') {
+        } else if (msg.channel.name == 'regextest' || msg.channel.name == 'pro' ||msg.channel.name == 'mdl' || msg.channel.name == 'advanced' || msg.channel.name == 'main' || msg.channel.name == 'im' || msg.channel.name == 'open') {
             let errors = [];
             errors = getMessageErrors(msg);
             if (errors.length > 0) {
@@ -117,7 +117,7 @@ client.on('message', msg => {
 })
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
-    if (oldMessage.channel.name == 'mdl' || oldMessage.channel.name == 'advanced' || oldMessage.channel.name == 'main' || oldMessage.channel.name == 'im' || oldMessage.channel.name == 'open) {
+    if (oldMessage.channel.name == 'regextest' || oldMessage.channel.name == 'pro' || oldMessage.channel.name == 'mdl' || oldMessage.channel.name == 'advanced' || oldMessage.channel.name == 'main' || oldMessage.channel.name == 'im' || oldMessage.channel.name == 'open') {
         let errors = [];
         errors = getMessageErrors(newMessage);
         if (errors.length > 0) {
