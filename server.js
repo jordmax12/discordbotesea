@@ -104,12 +104,12 @@ client.on('message', msg => {
 
               })
             }
-        } else if (msg.channel.name == 'regextest') {
+        } else if (msg.channel.name == 'mdl' || msg.channel.name == 'advanced' || msg.channel.name == 'main' || msg.channel.name == 'im' || msg.channel.name == 'open') {
             let errors = [];
             errors = getMessageErrors(msg);
             if (errors.length > 0) {
                 msg.delete();
-                client.channels.get('536432815357558786').send(`message: ${msg.content} from: ${msg.member.displayName}`);
+                client.channels.get('532974153264005130').send(`message: ${msg.content} from: ${msg.member.displayName}`);
                 msg.author.sendMessage(`${errors[0]}\n\nnumber of errors ${errors.length}\n\noriginal message:\n${msg.content}`);
             }
         }
@@ -117,7 +117,7 @@ client.on('message', msg => {
 })
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
-    if (oldMessage.channel.name == 'regextest') {
+    if (oldMessage.channel.name == 'mdl' || oldMessage.channel.name == 'advanced' || oldMessage.channel.name == 'main' || oldMessage.channel.name == 'im' || oldMessage.channel.name == 'open) {
         let errors = [];
         errors = getMessageErrors(newMessage);
         if (errors.length > 0) {
