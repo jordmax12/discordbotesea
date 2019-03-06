@@ -63,7 +63,10 @@ const fetchUserData = (userId) => new Promise(async (resolve, reject) => {
   const url = `https://play.esea.net/api/users/${userId}/profile`;
   console.log('Fetching user data');
   fetch(url)
-  .then(r => r.json())
+  .then(r => { 
+      console.log(r);
+      return r.json()
+   })
   .then(async data => {
     data['alias'] = await fetchUserAlias(userId);
     console.log(data.alias);
