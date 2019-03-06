@@ -145,7 +145,7 @@ app.get("/about", function(request, response) {
 });
 
 // finally we tell the server to listen for requests
-app.listen(process.env.PORT);
+app.listen(3000);
 // the server needs to listen for requests on a specified port:
 // a port can be thought of as an access on device to communicate data
 // and computers have thousands of ports
