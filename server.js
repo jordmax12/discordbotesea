@@ -18,7 +18,7 @@ const {
     fetchUserData,
     getTeamTag
 } = require('./crawler-helper.js');
-const scrimFormatPattern = /(^(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ((0?[1-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ ,\/]?)+ ?(inferno|nuke|mirage|dust2|train|overpass|cache|\/)*)$)+/gim;
+const scrimFormatPattern = /(^(((mon|fri|sun)(day)?|tue(sday)?|wed(nesday)?|thu(rsday)?|sat(urday)?) (0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ((0?[1-9]|1[012])([: ][0-5]?[0-9])? ?([ap]m)?[ ,\/]?)+ ?(inferno|nuke|mirage|dust2|train|overpass|cache|vertigo|\/)*)$)+/gim;
 
 var tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
